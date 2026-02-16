@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 ENTITY_DESCRIPTIONS = (
     SwitchEntityDescription(
-        key="integration_blueprint",
+        key="custom_components/cattainer_integration",
         name="Integration Switch",
         icon="mdi:format-quote-close",
     ),
