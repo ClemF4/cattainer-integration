@@ -14,6 +14,7 @@ from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
 from homeassistant.components.panel_custom import async_register_panel
+from homeassistant.components import frontend
 
 from .api import IntegrationBlueprintApiClient
 from .const import DOMAIN, LOGGER
@@ -60,19 +61,18 @@ async def async_setup_entry(
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    sidebar_url = "http://localhost:5000"
+    sidebar_url = "http://127.0.0.1:5000"
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
-    await async_register_panel(
+    await frontend.async_register_built_in_panel(
         hass,
-        frontend_url_path="cattainer",  # result is http://<HA-IP>:8123/cattainer
-        webcomponent_name="cattainer-panel",  # unique component name
+        component_name="iframe",
         sidebar_title="Cattainer",
         sidebar_icon="mdi:cat",
-        module_url=sidebar_url,  # The URL your Flask app is on
-        embed_iframe=True,  # this line is important since it makes the sidebar show the external website
+        frontend_url_path="cattainer",
+        config={"url": sidebar_url},  # Pass the URL in the config dict
         require_admin=False,
-    )
+    )  # type: ignore
 
     return True
 
