@@ -61,7 +61,7 @@ async def async_setup_entry(
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    sidebar_url = "http://127.0.0.1:5000"
+    sidebar_url = "http://127.0.0.1:5000"  # hardcoded ip for texting
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
     await frontend.async_register_built_in_panel(
