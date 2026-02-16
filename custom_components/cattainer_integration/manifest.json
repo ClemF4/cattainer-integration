@@ -1,5 +1,5 @@
 {
-  "domain": "/custom_components/cattainer_integration",
+  "domain": "cattainer_integration",
   "name": "Cattainer",
   "codeowners": [
     "@ClemF4"
