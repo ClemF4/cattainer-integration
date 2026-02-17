@@ -10,11 +10,10 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
+from homeassistant.components import frontend
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
-from homeassistant.components.panel_custom import async_register_panel
-from homeassistant.components import frontend
 
 from .api import IntegrationBlueprintApiClient
 from .const import DOMAIN, LOGGER
@@ -27,9 +26,9 @@ if TYPE_CHECKING:
     from .data import IntegrationBlueprintConfigEntry
 
 PLATFORMS: list[Platform] = [
-    Platform.SENSOR,
+    # Platform.SENSOR,
     Platform.BINARY_SENSOR,
-    Platform.SWITCH,
+    # Platform.SWITCH,
 ]
 
 
@@ -72,7 +71,7 @@ async def async_setup_entry(
         frontend_url_path="cattainer",
         config={"url": sidebar_url},  # Pass the URL in the config dict
         require_admin=False,
-    )  # type: ignore
+    )  # type: ignore  # noqa: PGH003
 
     return True
 
