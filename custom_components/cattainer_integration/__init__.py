@@ -15,7 +15,7 @@ from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME, Platfor
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
 
-from custom_components.cattainer_integration import entity
+from custom_components.cattainer_integration import entity  # noqa: F401
 
 from .api import IntegrationBlueprintApiClient
 from .const import DOMAIN, LOGGER
