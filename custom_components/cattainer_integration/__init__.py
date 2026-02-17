@@ -11,9 +11,11 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 
 from homeassistant.components import frontend
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
+
+from custom_components.cattainer_integration import entity
 
 from .api import IntegrationBlueprintApiClient
 from .const import DOMAIN, LOGGER
@@ -60,10 +62,14 @@ async def async_setup_entry(
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    sidebar_url = "http://127.0.0.1:5000"  # hardcoded ip for texting
+    cattainer_ip = entry.data[CONF_HOST]
+    sidebar_url = f"http://{cattainer_ip}:5000"  # Change this to include the correct port once i've made the web server
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
-    await frontend.async_register_built_in_panel(
+    frontend.async_remove_panel(hass, "cattainer")  # remove any existing panels
+
+    # register the new cattainer panel
+    frontend.async_register_built_in_panel(
         hass,
         component_name="iframe",
         sidebar_title="Cattainer",
