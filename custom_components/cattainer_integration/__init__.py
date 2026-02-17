@@ -63,7 +63,8 @@ async def async_setup_entry(
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     cattainer_ip = entry.data[CONF_HOST]
-    sidebar_url = f"http://{cattainer_ip}:5000"  # Change this to include the correct port once i've made the web server
+    # Change this below to include the correct port once i've made the web server
+    sidebar_url = f"http://{cattainer_ip}:5000"
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
     frontend.async_remove_panel(hass, "cattainer")  # remove any existing panels
@@ -87,6 +88,9 @@ async def async_unload_entry(
     entry: IntegrationBlueprintConfigEntry,
 ) -> bool:
     """Handle removal of an entry."""
+    frontend.async_remove_panel(
+        hass, "cattainer"
+    )  # remove the Cattainer panel if the integration is removed
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 

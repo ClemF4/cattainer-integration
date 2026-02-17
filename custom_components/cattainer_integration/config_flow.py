@@ -61,7 +61,8 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(  # added this to prompt the user to imput their cattainers ip
+                    # added this to prompt the user to imput their cattainers ip
+                    vol.Required(
                         CONF_HOST,
                         default=(user_input or {}).get(CONF_HOST, "192.168.1.X"),
                     ): selector.TextSelector(
