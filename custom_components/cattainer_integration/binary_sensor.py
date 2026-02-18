@@ -12,7 +12,7 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
-from .const import SIGNAL_CAT_DETECTED
+from .const import LOGGER, SIGNAL_CAT_DETECTED
 from .entity import IntegrationBlueprintEntity
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ ENTITY_DESCRIPTIONS = (
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
+    hass: HomeAssistant,  # noqa: ARG001
     entry: IntegrationBlueprintConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
@@ -57,33 +57,35 @@ class IntegrationBlueprintBinarySensor(IntegrationBlueprintEntity, BinarySensorE
         """Initialize the binary_sensor class."""
         super().__init__(coordinator)
         self.entity_description = entity_description
-        # Default state is Off until we hear from the webhook
         self._is_on = False
 
     async def async_added_to_hass(self) -> None:
         """Run when this Entity has been added to HA."""
-        # 1. Call the parent class's startup (important!)
+        # 1. Initialize the parent class
         await super().async_added_to_hass()
 
-        # 2. Listen for the signal from __init__.py
-        # When SIGNAL_CAT_DETECTED fires, run self._handle_webhook_update
+        # 2. Listen for the webhook signal
         self.async_on_remove(
             async_dispatcher_connect(
-                self.hass, SIGNAL_CAT_DETECTED, self._handle_webhook_update
+                self.hass,
+                SIGNAL_CAT_DETECTED,
+                self._handle_webhook_update,
             )
         )
 
     @callback
     def _handle_webhook_update(self, data: dict[str, Any]) -> None:
         """Handle incoming webhook data."""
-        # We expect data like: {"cat_detected": true}
-        # If the key is missing, default to False
-        new_state = data.get("cat_detected", False)
+        LOGGER.warning(f"Cattainer Sensor RECEIVED Signal with data: {data}")
 
+        # Check for "cat_detected" (default to False if missing)
+        new_state = data.get("cat_detected", False)
         self._is_on = new_state
 
-        # Tell Home Assistant the state changed so it updates the dashboard
+        # Force UI update
         self.async_write_ha_state()
+
+        LOGGER.warning(f"Cattainer Sensor Updated State to: {self._is_on}")
 
     @property
     def is_on(self) -> bool:
