@@ -68,17 +68,17 @@ async def async_setup_entry(
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    # sidebar setup
+    # Sidebar setup
     cattainer_ip = entry.data[CONF_HOST]
     sidebar_url = f"http://{cattainer_ip}:5000"
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
-    frontend.async_remove_panel(hass, "cattainer")  # remove any existing panels
+    frontend.async_remove_panel(hass, "cattainer")  # Remove any existing panels
 
-    # build the new panel
+    # Build the new panel
     frontend.async_register_built_in_panel(
         hass,
-        component_name="iframe",  # important since it makes the panel host a webserver
+        component_name="iframe",  # Important since it makes the panel host a webserver
         sidebar_title="Cattainer",
         sidebar_icon="mdi:cat",
         frontend_url_path="cattainer",
