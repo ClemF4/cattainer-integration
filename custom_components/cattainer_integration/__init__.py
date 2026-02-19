@@ -78,7 +78,7 @@ async def async_setup_entry(
     # build the new panel
     frontend.async_register_built_in_panel(
         hass,
-        component_name="iframe",  # this is important since it makes the panel host a webserver
+        component_name="iframe",  # important since it makes the panel host a webserver
         sidebar_title="Cattainer",
         sidebar_icon="mdi:cat",
         frontend_url_path="cattainer",

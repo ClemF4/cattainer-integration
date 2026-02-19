@@ -61,7 +61,6 @@ class IntegrationBlueprintBinarySensor(IntegrationBlueprintEntity, BinarySensorE
 
     async def async_added_to_hass(self) -> None:
         """Run when this Entity has been added to HA."""
-
         await super().async_added_to_hass()
 
         # Listen for the webhook signal
