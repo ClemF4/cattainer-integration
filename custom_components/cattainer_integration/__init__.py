@@ -68,16 +68,17 @@ async def async_setup_entry(
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
-    # --- 1. SIDEBAR SETUP ---
+    # sidebar setup
     cattainer_ip = entry.data[CONF_HOST]
     sidebar_url = f"http://{cattainer_ip}:5000"
     LOGGER.info(f"Registering Cattainer panel with url: {sidebar_url}")
 
     frontend.async_remove_panel(hass, "cattainer")  # remove any existing panels
 
+    # build the new panel
     frontend.async_register_built_in_panel(
         hass,
-        component_name="iframe",
+        component_name="iframe",  # this is important since it makes the panel host a webserver
         sidebar_title="Cattainer",
         sidebar_icon="mdi:cat",
         frontend_url_path="cattainer",
@@ -85,7 +86,7 @@ async def async_setup_entry(
         require_admin=False,
     )  # type: ignore  # noqa: PGH003
 
-    # --- 2. WEBHOOK SETUP (This was missing!) ---
+    # Webhook setup
     LOGGER.info(f"Registering Webhook: {WEBHOOK_ID}")
     webhook.async_register(
         hass,
@@ -118,9 +119,6 @@ async def async_reload_entry(
 ) -> None:
     """Reload config entry."""
     await hass.config_entries.async_reload(entry.entry_id)
-
-
-# ... bottom of __init__.py ...
 
 
 async def handle_webhook(
