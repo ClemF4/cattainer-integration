@@ -99,7 +99,7 @@ trigger:
 action:
   - action: notify.mobile_app_your_phone
     data:
-      title: "🐾 Cat Boundary Alert!"
+      title: "Cat Boundary Alert!"
       message: "Your cat was detected in a restricted zone or preparing to jump the fence!"
 mode: single
 ```
